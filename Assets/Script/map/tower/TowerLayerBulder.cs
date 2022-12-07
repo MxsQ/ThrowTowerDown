@@ -49,25 +49,32 @@ public abstract class TowerLayerBulder
         return layers;
     }
 
+    protected GameObject GetNewBrick()
+    {
+        return GameObject.Instantiate(buildParams.bricks[0]); ;
+    }
+
     protected abstract TowerLayer BuildLayer(Transform parent, int length);
 
-    public class BuildParams
-    {
-        public GameObject[] bricks;
-        public TowerShaper towerLayer;
-        public float startY;
-        public float brickHight;
-        public Transform host;
-        public float startMark;
 
-        public BuildParams(TowerShaper _towerLayer, float _startY, float _brickHight, float _startMark, Transform _host, GameObject[] _bricks)
-        {
-            towerLayer = _towerLayer;
-            startY = _startY;
-            brickHight = _brickHight;
-            startMark = _startMark;
-            host = _host;
-            bricks = _bricks;
-        }
+}
+
+public class BuildParams
+{
+    public GameObject[] bricks;
+    public TowerShaper towerLayer;
+    public float startY;
+    public float brickHight;
+    public Transform host;
+    public float startMark;
+
+    public BuildParams(TowerShaper _towerLayer, float _startY, float _brickHight, float _startMark, Transform _host, GameObject[] _bricks)
+    {
+        towerLayer = _towerLayer;
+        startY = _startY;
+        brickHight = _brickHight;
+        startMark = _startMark;
+        host = _host;
+        bricks = _bricks;
     }
 }
