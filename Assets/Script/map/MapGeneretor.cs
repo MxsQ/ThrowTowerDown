@@ -8,17 +8,20 @@ public class MapGeneretor : MonoBehaviour
 {
     [SerializeField] int mapIndex;
     [SerializeField] Transform host;
-    [SerializeField] GameObject[] bricks;
+    [SerializeField] GameObject bricks;
+    [SerializeField] Material[] birckMaterials;
     [SerializeField] Level[] levels;
 
     List<GameObject> allBrick = new List<GameObject>();
+    List<TowerLayer> towerLayers = new List<TowerLayer>();
 
-    public void BuildTower()
+    public List<TowerLayer> BuildTower()
     {
         /*   foreach (GameObject obj in allBrick)
            {
                DestroyImmediate(obj);
            }*/
+        towerLayers.Clear();
 
         for (int index = host.childCount - 1; index >= 0; index--)
         {
@@ -33,12 +36,15 @@ public class MapGeneretor : MonoBehaviour
 
         for (int i = 0; i < shapes.Length; i++)
         {
-            BuildParams buildParams = new BuildParams(shapes[i], startY, 1, brickHight, host, bricks);
+            BuildParams buildParams = new BuildParams(shapes[i], startY, 1, brickHight, host, bricks, birckMaterials, levels[mapIndex].seek);
             TowerLayerBulder bulder = GetBuilder(shapes[i].shape, buildParams);
-            List<TowerLayer> towerLayers = bulder.Build();
+            List<TowerLayer> tmpTowerLayers = bulder.Build();
+            towerLayers.AddRange(tmpTowerLayers);
             startY += towerLayers.Count * brickHight;
             startMark += towerLayers.Count;
         }
+
+        return new List<TowerLayer>(towerLayers);
     }
 
     private TowerLayerBulder GetBuilder(Shape shape, BuildParams param)
@@ -67,5 +73,6 @@ public class MapGeneretor : MonoBehaviour
 [System.Serializable]
 public class Level
 {
+    public int seek;
     public TowerShaper[] towerLayer;
 }

@@ -12,4 +12,9 @@ public class GameManagers : MonoBehaviour
     {
         Instance = this;
     }
+
+    private void Start()
+    {
+        LevelManager.Instance.LoadNextLevel();
+    }
 }

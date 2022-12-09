@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using static Tower;
 using static TowerLayerBulder;
 
@@ -15,6 +14,7 @@ public abstract class TowerLayerBulder
     {
         buildParams = _buildParams;
         towerShape = _buildParams.towerLayer;
+        Random.InitState(buildParams.seek);
     }
 
     public List<TowerLayer> Build()
@@ -49,9 +49,24 @@ public abstract class TowerLayerBulder
         return layers;
     }
 
-    protected GameObject GetNewBrick()
+    protected GameObject GetNewBrick(TowerLayer host)
     {
-        return GameObject.Instantiate(buildParams.bricks[0]); ;
+        int index = Random.Range(1, buildParams.materials.Length);
+        Material material = Object.Instantiate(buildParams.materials[index]);
+        var brick = GameObject.Instantiate(buildParams.brick);
+        brick.GetComponent<MeshRenderer>().material = material;
+        brick.GetComponent<Brick>().Host = host;
+        return brick;
+        //return GameObject.Instantiate(buildParams.bricks[0]);
+    }
+
+    protected GameObject BuildBrickOn(float x, float z, Transform parent, TowerLayer host)
+    {
+        GameObject brick = GetNewBrick(host);
+        Vector3 ps = new Vector3(x, 0, z);
+        brick.transform.parent = parent;
+        brick.transform.localPosition = ps;
+        return brick;
     }
 
     protected abstract TowerLayer BuildLayer(Transform parent, int length);
@@ -61,20 +76,24 @@ public abstract class TowerLayerBulder
 
 public class BuildParams
 {
-    public GameObject[] bricks;
+    public GameObject brick;
+    public Material[] materials;
     public TowerShaper towerLayer;
     public float startY;
     public float brickHight;
     public Transform host;
     public float startMark;
+    public int seek;
 
-    public BuildParams(TowerShaper _towerLayer, float _startY, float _brickHight, float _startMark, Transform _host, GameObject[] _bricks)
+    public BuildParams(TowerShaper _towerLayer, float _startY, float _brickHight, float _startMark, Transform _host, GameObject _bricks, Material[] _materials, int _seek)
     {
         towerLayer = _towerLayer;
         startY = _startY;
         brickHight = _brickHight;
         startMark = _startMark;
         host = _host;
-        bricks = _bricks;
+        brick = _bricks;
+        materials = _materials;
+        seek = _seek;
     }
 }

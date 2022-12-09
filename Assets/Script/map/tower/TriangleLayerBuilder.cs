@@ -19,12 +19,9 @@ public class TriangleLayerBuilder : TowerLayerBulder
         // build bottom
         for (int index = 0; index < length; index++)
         {
-            GameObject brick = GetNewBrick();
             float x = -maxOffset + index * unit;
             float z = -maxOffset;
-            Vector3 ps = new Vector3(x, 0, z);
-            brick.transform.parent = parent;
-            brick.transform.localPosition = ps;
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
             curBricks.Add(brick);
         }
 
@@ -33,12 +30,9 @@ public class TriangleLayerBuilder : TowerLayerBulder
         float perOffserZ = Mathf.Sin(60 * Mathf.Deg2Rad) * unit;
         for (int index = 1; index < length; index++)
         {
-            GameObject brick = GetNewBrick();
             float x = -maxOffset + index * perOffserX;
             float z = -maxOffset + index * perOffserZ;
-            Vector3 ps = new Vector3(x, 0, z);
-            brick.transform.parent = parent;
-            brick.transform.localPosition = ps;
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
             curBricks.Add(brick);
         }
 
@@ -46,12 +40,9 @@ public class TriangleLayerBuilder : TowerLayerBulder
         float maxO = -maxOffset + perOffserZ * (length - 1);
         for (int index = 0; index < length - 2; index++)
         {
-            GameObject brick = GetNewBrick();
             float x = (index + 1) * perOffserX;
             float z = maxO - (index + 1) * perOffserZ;
-            Vector3 ps = new Vector3(x, 0, z);
-            brick.transform.parent = parent;
-            brick.transform.localPosition = ps;
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
             curBricks.Add(brick);
         }
 

@@ -20,48 +20,36 @@ public class CubeLayerBuilder : TowerLayerBulder
         // build Top
         for (int index = 0; index < length; index++)
         {
-            GameObject brick = GetNewBrick();
             float x = -maxLeftOffset + index * unit;
             float z = topOffset;
-            Vector3 ps = new Vector3(x, 0, z);
-            brick.transform.parent = parent;
-            brick.transform.localPosition = ps;
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
             curBricks.Add(brick);
         }
 
         // build Bottom
         for (int index = 0; index < length; index++)
         {
-            GameObject brick = GetNewBrick();
             float x = -maxLeftOffset + index * unit;
             float z = -topOffset;
-            Vector3 ps = new Vector3(x, 0, z);
-            brick.transform.parent = parent;
-            brick.transform.localPosition = ps;
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
             curBricks.Add(brick);
         }
 
         // build left
         for (int index = 0; index < length - 2; index++)
         {
-            GameObject brick = GetNewBrick();
             float x = -maxLeftOffset;
             float z = topOffset - index * unit - unit;
-            Vector3 ps = new Vector3(x, 0, z);
-            brick.transform.parent = parent;
-            brick.transform.localPosition = ps;
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
             curBricks.Add(brick);
         }
 
         // build right
         for (int index = 0; index < length - 2; index++)
         {
-            GameObject brick = GetNewBrick();
             float x = maxLeftOffset;
             float z = topOffset - index * unit - unit;
-            Vector3 ps = new Vector3(x, 0, z);
-            brick.transform.parent = parent;
-            brick.transform.localPosition = ps;
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
             curBricks.Add(brick);
         }
 

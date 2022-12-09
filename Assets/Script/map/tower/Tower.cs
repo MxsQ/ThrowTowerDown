@@ -33,12 +33,20 @@ public class Tower
         {
             bricks.Add(brick);
         }
-    }
 
-    public enum Shape
-    {
-        Circle,
-        Square,
-        Triangle,
+        public void Remove(GameObject brick)
+        {
+            bricks.Remove(brick);
+        }
     }
+}
+
+
+
+
+public enum Shape
+{
+    Circle,
+    Square,
+    Triangle,
 }
