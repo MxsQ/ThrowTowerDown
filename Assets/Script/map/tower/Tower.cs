@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,16 +28,61 @@ public class Tower
 
     public class TowerLayer
     {
-        public List<GameObject> bricks = new List<GameObject>();
+        public List<Brick> bricks = new List<Brick>();
+        public bool frezz = false;
 
         public void Add(GameObject brick)
         {
-            bricks.Add(brick);
+            bricks.Add(brick.GetComponent<Brick>());
         }
 
         public void Remove(GameObject brick)
         {
-            bricks.Remove(brick);
+            bricks.Remove(brick.GetComponent<Brick>());
+        }
+
+        public void Pin()
+        {
+            foreach (Brick b in bricks)
+            {
+                b.Pin();
+            }
+            frezz = true;
+        }
+
+        public void Loosen()
+        {
+            //  Debug.Log("lose");
+            foreach (Brick b in bricks)
+            {
+                b.Loosen();
+            }
+            frezz = false;
+        }
+
+        public bool isCollapse()
+        {
+            return bricks.Count == 0;
+        }
+
+        public void UpdateBrickState()
+        {
+            List<Brick> tmpBricks = new List<Brick>();
+            foreach (Brick b in bricks)
+            {
+                if (b.AwayFrom())
+                {
+                    tmpBricks.Add(b);
+                }
+            }
+
+
+            //  bricks.RemoveAll((brick) => { return brick.AwayFrom(); });
+
+            foreach (Brick b in tmpBricks)
+            {
+                bricks.Remove(b);
+            }
         }
     }
 }

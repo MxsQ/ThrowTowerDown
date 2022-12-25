@@ -16,14 +16,16 @@ public class CubeLayerBuilder : TowerLayerBulder
         float topOffset = maxLeftOffset;
 
         TowerLayer curBricks = new TowerLayer();
+        int count = 0;
 
         // build Top
         for (int index = 0; index < length; index++)
         {
             float x = -maxLeftOffset + index * unit;
             float z = topOffset;
-            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks, count.ToString());
             curBricks.Add(brick);
+            count++;
         }
 
         // build Bottom
@@ -31,8 +33,9 @@ public class CubeLayerBuilder : TowerLayerBulder
         {
             float x = -maxLeftOffset + index * unit;
             float z = -topOffset;
-            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks, count.ToString());
             curBricks.Add(brick);
+            count++;
         }
 
         // build left
@@ -40,8 +43,9 @@ public class CubeLayerBuilder : TowerLayerBulder
         {
             float x = -maxLeftOffset;
             float z = topOffset - index * unit - unit;
-            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks, count.ToString());
             curBricks.Add(brick);
+            count++;
         }
 
         // build right
@@ -49,8 +53,9 @@ public class CubeLayerBuilder : TowerLayerBulder
         {
             float x = maxLeftOffset;
             float z = topOffset - index * unit - unit;
-            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks, count.ToString());
             curBricks.Add(brick);
+            count++;
         }
 
         return curBricks;

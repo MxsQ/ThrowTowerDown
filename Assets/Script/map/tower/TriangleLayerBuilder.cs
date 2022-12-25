@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using static Tower;
 
 public class TriangleLayerBuilder : TowerLayerBulder
@@ -15,14 +16,16 @@ public class TriangleLayerBuilder : TowerLayerBulder
         float maxOffset = Mathf.Cos(60 * Mathf.Deg2Rad) * length * unit - unit / 2;
 
         TowerLayer curBricks = new TowerLayer();
+        int count = 0;
 
         // build bottom
         for (int index = 0; index < length; index++)
         {
             float x = -maxOffset + index * unit;
             float z = -maxOffset;
-            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks, count.ToString());
             curBricks.Add(brick);
+            count++;
         }
 
         //// build left
@@ -32,8 +35,9 @@ public class TriangleLayerBuilder : TowerLayerBulder
         {
             float x = -maxOffset + index * perOffserX;
             float z = -maxOffset + index * perOffserZ;
-            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks, count.ToString());
             curBricks.Add(brick);
+            count++;
         }
 
         // build right
@@ -42,8 +46,9 @@ public class TriangleLayerBuilder : TowerLayerBulder
         {
             float x = (index + 1) * perOffserX;
             float z = maxO - (index + 1) * perOffserZ;
-            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks, count.ToString());
             curBricks.Add(brick);
+            count++;
         }
 
         return curBricks;

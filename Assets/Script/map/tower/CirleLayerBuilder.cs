@@ -23,7 +23,7 @@ public class CirleLayerBuilder : TowerLayerBulder
             float nowAngle = index * perAngle;
             float x = radius * Mathf.Cos(nowAngle * Mathf.Deg2Rad);
             float z = radius * Mathf.Sin(nowAngle * Mathf.Deg2Rad);
-            GameObject brick = BuildBrickOn(x, z, parent, curBricks);
+            GameObject brick = BuildBrickOn(x, z, parent, curBricks, index.ToString());
             curBricks.Add(brick);
         }
 

@@ -6,14 +6,21 @@ using static TowerLayerBulder;
 
 public class MapGeneretor : MonoBehaviour
 {
-    [SerializeField] int mapIndex;
+    [SerializeField] public int mapIndex;
     [SerializeField] Transform host;
     [SerializeField] GameObject bricks;
-    [SerializeField] Material[] birckMaterials;
-    [SerializeField] Level[] levels;
+    [SerializeField] public ColorBind[] colorBind;
+    [SerializeField] public Level[] levels;
 
     List<GameObject> allBrick = new List<GameObject>();
     List<TowerLayer> towerLayers = new List<TowerLayer>();
+
+    public static MapGeneretor Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public List<TowerLayer> BuildTower()
     {
@@ -33,15 +40,28 @@ public class MapGeneretor : MonoBehaviour
         float startMark = 0;
         float startY = 0;
         float brickHight = 1;
+        float startMass = 0;
+        float increaseMass = 2;
+
+        //float totalNum = 0;
 
         for (int i = 0; i < shapes.Length; i++)
         {
-            BuildParams buildParams = new BuildParams(shapes[i], startY, 1, brickHight, host, bricks, birckMaterials, levels[mapIndex].seek);
+            startMass += increaseMass * shapes[i].hight;
+            //totalNum += shapes[i].hight;
+        }
+
+        for (int i = 0; i < shapes.Length; i++)
+        {
+            //startMass = Mathf.Pow(2, totalNum);
+            BuildParams buildParams = new BuildParams(shapes[i], startY, brickHight, startMass, increaseMass, 1, host, bricks, colorBind, levels[mapIndex].seek);
             TowerLayerBulder bulder = GetBuilder(shapes[i].shape, buildParams);
             List<TowerLayer> tmpTowerLayers = bulder.Build();
             towerLayers.AddRange(tmpTowerLayers);
             startY += towerLayers.Count * brickHight;
             startMark += towerLayers.Count;
+            startMass -= increaseMass * shapes[i].hight;
+            //totalNum -= shapes[i].hight;
         }
 
         return new List<TowerLayer>(towerLayers);
@@ -74,5 +94,13 @@ public class MapGeneretor : MonoBehaviour
 public class Level
 {
     public int seek;
+    public int ShowLayerNum = 8;
     public TowerShaper[] towerLayer;
+}
+
+[System.Serializable]
+public class ColorBind
+{
+    public BrickColor color;
+    public Material material;
 }
