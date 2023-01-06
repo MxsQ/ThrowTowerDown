@@ -14,6 +14,10 @@ public class LevelManager : MonoBehaviour
     List<TowerLayer> towerLayers = new List<TowerLayer>();
     Spawn spawn;
 
+    int showingNum = 0;
+    int curTopLayerIndex = 0;
+    int curShowBottomIndex = 0;
+
     private void Awake()
     {
         Instance = this;
@@ -26,6 +30,9 @@ public class LevelManager : MonoBehaviour
     {
         towerLayers = mapGeneretor.BuildTower();
         Level level = mapGeneretor.levels[levelIndex];
+        showingNum = level.ShowLayerNum;
+        curTopLayerIndex = towerLayers.Count - 1;
+        curShowBottomIndex = curTopLayerIndex - showingNum + 1;
         Debug.Log(towerLayers.Count + "  " + level.ShowLayerNum);
         for (int index = 0; index < towerLayers.Count - level.ShowLayerNum; index++)
         {
@@ -78,16 +85,58 @@ public class LevelManager : MonoBehaviour
         return colors[Random.Range(0, colors.Length)];
     }
 
+    // Check form top untill a layer is valid or to the bottom.
     IEnumerator CheckTower()
     {
         yield return new WaitForSeconds(0.5f);
         while (GameManagers.Instance.inGame)
         {
-            foreach (TowerLayer towerLayer in towerLayers)
+            int changeCount = 0;
+            int curIndex = curTopLayerIndex;
+            bool hasChange = false;
+
+            while (curIndex >= 0)
             {
+                TowerLayer towerLayer = towerLayers[curIndex];
                 towerLayer.UpdateBrickState();
+                if (towerLayer.isCollapse())
+                {
+                    changeCount++;
+                    curIndex--;
+                    hasChange = true;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (hasChange)
+            {
+                Debug.Log($"before change: top={curTopLayerIndex} bottom={curShowBottomIndex}");
+                int losenTop = curShowBottomIndex - 1;
+                curShowBottomIndex -= changeCount;
+                curShowBottomIndex = curShowBottomIndex >= 0 ? curShowBottomIndex : 0;
+                int losenCount = curTopLayerIndex - curShowBottomIndex - showingNum + 1;
+                curTopLayerIndex -= changeCount;
+                Debug.Log($"do change: loosentop={losenTop} losenCount={losenCount}");
+                LosenNewLayer(losenCount, losenTop);
+                Debug.Log(changeCount + " layer be destory.");
             }
             yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    void LosenNewLayer(int count, int topIndex)
+    {
+        if (count <= 0)
+        {
+            return;
+        }
+
+        for (int index = topIndex; count > 0; count--, index--)
+        {
+            towerLayers[index].Loosen();
         }
     }
 }

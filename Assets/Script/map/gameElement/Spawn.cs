@@ -80,5 +80,7 @@ public class Spawn : MonoBehaviour
             bullect.transform.parent = parent;
         }
         bullect.transform.localPosition = Vector3.zero;
+
+        // Debug.Log("new bullet is " + color.ToString());
     }
 }
