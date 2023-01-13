@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawn : MonoBehaviour
+public class Spawn : MonoBehaviour, PinObject
 {
     [SerializeField] GameObject curBullectParent;
     [SerializeField] GameObject nextBullectParent;
@@ -14,6 +14,11 @@ public class Spawn : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
+        CameraMananger.Instance.SetPinObjecct(this);
     }
 
 
@@ -82,5 +87,16 @@ public class Spawn : MonoBehaviour
         bullect.transform.localPosition = Vector3.zero;
 
         // Debug.Log("new bullet is " + color.ToString());
+    }
+
+    public void OnCameraYChange(float curY)
+    {
+        var ps = gameObject.transform.position;
+        gameObject.transform.position = new Vector3(ps.x, curY - 2, ps.z);
+    }
+
+    public void OnCameraRotateAround(Vector3 center, Vector3 axis, float angle)
+    {
+        gameObject.transform.RotateAround(center, axis, angle);
     }
 }

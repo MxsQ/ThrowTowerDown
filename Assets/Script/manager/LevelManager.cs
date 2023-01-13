@@ -17,6 +17,7 @@ public class LevelManager : MonoBehaviour
     int showingNum = 0;
     int curTopLayerIndex = 0;
     int curShowBottomIndex = 0;
+    int towerHight = 0;
 
     private void Awake()
     {
@@ -31,7 +32,8 @@ public class LevelManager : MonoBehaviour
         towerLayers = mapGeneretor.BuildTower();
         Level level = mapGeneretor.levels[levelIndex];
         showingNum = level.ShowLayerNum;
-        curTopLayerIndex = towerLayers.Count - 1;
+        towerHight = towerLayers.Count;
+        curTopLayerIndex = towerHight - 1;
         curShowBottomIndex = curTopLayerIndex - showingNum + 1;
         Debug.Log(towerLayers.Count + "  " + level.ShowLayerNum);
         for (int index = 0; index < towerLayers.Count - level.ShowLayerNum; index++)
@@ -45,6 +47,16 @@ public class LevelManager : MonoBehaviour
 
         spawn.Reset();
         StartCoroutine("CheckTower");
+    }
+
+    public Level GetLevel()
+    {
+        return mapGeneretor.levels[levelIndex];
+    }
+
+    public int GetTowerHight()
+    {
+        return towerHight;
     }
 
     public BrickColor GetValidBrickColor()
@@ -122,6 +134,7 @@ public class LevelManager : MonoBehaviour
                 Debug.Log($"do change: loosentop={losenTop} losenCount={losenCount}");
                 LosenNewLayer(losenCount, losenTop);
                 Debug.Log(changeCount + " layer be destory.");
+                NotifyValidTowerLayerChange();
             }
             yield return new WaitForSeconds(0.5f);
         }
@@ -138,5 +151,10 @@ public class LevelManager : MonoBehaviour
         {
             towerLayers[index].Loosen();
         }
+    }
+
+    void NotifyValidTowerLayerChange()
+    {
+        GameManagers.Instance.OnValidTowerLayerChange(curTopLayerIndex);
     }
 }

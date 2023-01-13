@@ -4,7 +4,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Player : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class PlayerPanel : BasePanel, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     LayerMask brickMask;
 
@@ -15,9 +15,11 @@ public class Player : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDr
 
     Spawn spawn;
 
-    private void Start()
+    void Start()
     {
         spawn = FindObjectOfType<Spawn>();
+        Hide();
+        base.Start();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -73,4 +75,8 @@ public class Player : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDr
         brickMask = LayerMask.GetMask("Brick");
     }
 
+    public override Panel Name()
+    {
+        return Panel.Player;
+    }
 }
