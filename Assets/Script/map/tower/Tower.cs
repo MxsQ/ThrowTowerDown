@@ -65,7 +65,7 @@ public class Tower
             return bricks.Count == 0;
         }
 
-        public void UpdateBrickState()
+        public int UpdateBrickState()
         {
             List<Brick> tmpBricks = new List<Brick>();
             foreach (Brick b in bricks)
@@ -83,6 +83,8 @@ public class Tower
             {
                 bricks.Remove(b);
             }
+
+            return tmpBricks.Count;
         }
     }
 }

@@ -1,13 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 
 public class CameraMananger : MonoBehaviour
 {
     public static CameraMananger Instance;
 
-    Camera camera;
+    [SerializeField] public Transform cameraT;
+
     PinObject pinObj;
 
     float targetDownY;
@@ -15,7 +17,7 @@ public class CameraMananger : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        camera = Camera.main;
+
     }
 
     public void UpTo(float y)
@@ -25,8 +27,9 @@ public class CameraMananger : MonoBehaviour
 
     IEnumerator UpCameraAnim(float y)
     {
+
         var config = GameManagers.Instance.conifg;
-        var cameraOriginPs = camera.transform.position;
+        var cameraOriginPs = cameraT.position;
         float startY = cameraOriginPs.y;
         float endY = y;
 
@@ -40,32 +43,32 @@ public class CameraMananger : MonoBehaviour
         float startTime = Time.time;
         float ariiveTime = startTime + spanTime;
         float angelSpeed = config.CameraChangeRotateSpeedOnStart * Mathf.Deg2Rad;
-        Transform cameraT = Camera.main.transform;
 
+        Debug.Log("start to up camera.");
         //    Debug.Log("start " + startY + "  endY " + endY);
 
         while (Time.time < ariiveTime)
         {
             deltaTime = Time.time - startTime;
             float curY = Mathf.Lerp(startY, endY, deltaTime / spanTime);
-            Debug.Log("CurTime=" + deltaTime + " next Y " + curY);
+            //    Debug.Log("CurTime=" + deltaTime + " next Y " + curY);
             cameraT.position = new Vector3(cameraT.position.x, curY, cameraT.position.z);
             pinObj.OnCameraYChange(curY);
 
             var rotateCenter = new Vector3(0, curY, 0);
             var asix = Vector3.up;
             var angle = angelSpeed * deltaTime;
-            cameraT.RotateAround(rotateCenter, asix, angle);
-            pinObj.OnCameraRotateAround(rotateCenter, asix, angle);
+            RotateAround(rotateCenter, asix, angle);
             yield return null;
         }
         cameraT.position = new Vector3(cameraT.position.x, endY, cameraT.position.z);
         pinObj.OnCameraYChange(endY);
+        Debug.Log("ends to up camera.");
     }
 
     public void DownTo(float y)
     {
-        float startY = camera.transform.position.y;
+        float startY = cameraT.position.y;
         targetDownY = y;
         if (startY < targetDownY)
         {
@@ -85,14 +88,14 @@ public class CameraMananger : MonoBehaviour
     IEnumerator DownCameraAnim()
     {
         var config = GameManagers.Instance.conifg;
-        float startY = camera.transform.position.y;
+        float startY = cameraT.position.y;
 
         float spanTime = config.CameraChangeTimeOnDown;
         float deltaTime = 0;
         float startTime = Time.time;
         float ariiveTime = startTime + spanTime;
         float angelSpeed = config.CameraChangeRotateSpeedOnStart * Mathf.Deg2Rad;
-        Transform cameraT = Camera.main.transform;
+
 
         while (Time.time < ariiveTime)
         {
@@ -106,6 +109,22 @@ public class CameraMananger : MonoBehaviour
         cameraT.position = new Vector3(cameraT.position.x, targetDownY, cameraT.position.z);
         pinObj.OnCameraYChange(targetDownY);
     }
+
+    public void RotateAround(Vector3 center, Vector3 axis, float angle)
+    {
+        cameraT.transform.RotateAround(center, axis, angle);
+        pinObj.OnCameraRotateAround(center, axis, angle);
+    }
+
+
+    //public void up()
+    //{
+    //    inYChange = true;
+    //    MMF_RotatePositionAround mmAround = upFeedback.GetFeedbackOfType<MMF_RotatePositionAround>();
+    //    mmAround.RemapCurveOne = 540;
+    //    upFeedback.Initialization();
+    //    upFeedback.PlayFeedbacks();
+    //}
 }
 
 public interface PinObject

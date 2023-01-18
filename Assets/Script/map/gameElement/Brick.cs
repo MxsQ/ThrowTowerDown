@@ -44,6 +44,8 @@ public class Brick : MonoBehaviour
             findNeighourToStack(curBrick, markDic, tmpStack);
         }
 
+        LevelManager.Instance.BrickOut(markDic.Count);
+
         foreach (var entry in markDic)
         {
             entry.Value.Eliminate();

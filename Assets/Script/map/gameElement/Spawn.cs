@@ -92,7 +92,7 @@ public class Spawn : MonoBehaviour, PinObject
     public void OnCameraYChange(float curY)
     {
         var ps = gameObject.transform.position;
-        gameObject.transform.position = new Vector3(ps.x, curY - 2, ps.z);
+        gameObject.transform.position = new Vector3(ps.x, curY - .8f, ps.z);
     }
 
     public void OnCameraRotateAround(Vector3 center, Vector3 axis, float angle)

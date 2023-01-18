@@ -33,12 +33,14 @@ public class PlayerPanel : BasePanel, IPointerDownHandler, IPointerUpHandler, ID
         curRotateAngle += angle;
         curRotateAngle %= 360;
         var cameraObj = Camera.main.gameObject;
-        //   var originalRatate = Camera.main.gameObject.transform;
+
+        //    Debug.Log("offset=" + offsetX + "  angle=" + angle);
 
         Quaternion rotateion = Quaternion.Euler(0, angle, 0);
+        CameraMananger.Instance.RotateAround(ratateCenter.transform.position, Vector3.up, curRotateAngle * Mathf.Deg2Rad);
         cameraObj.transform.RotateAround(ratateCenter.transform.position, Vector3.up, curRotateAngle * Mathf.Deg2Rad);
 
-        spawn.gameObject.transform.RotateAround(ratateCenter.transform.position, Vector3.up, curRotateAngle * Mathf.Deg2Rad);
+        //spawn.gameObject.transform.RotateAround(ratateCenter.transform.position, Vector3.up, curRotateAngle * Mathf.Deg2Rad);
     }
 
 

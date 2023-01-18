@@ -28,6 +28,7 @@ public class UIManager : MonoBehaviour
         GameManagers.Instance.InvokeGameStart();
         panels[Panel.Main].Hide();
         panels[Panel.Player].Show();
+        panels[Panel.PlayInfo].Show();
     }
 }
 
@@ -36,4 +37,5 @@ public enum Panel
     Main,
     Player,
     Skin,
+    PlayInfo,
 }

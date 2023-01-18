@@ -12,6 +12,7 @@ public class GameManagers : MonoBehaviour
     public static GameManagers Instance;
 
     public static event Action OnGameStart;
+    public static event Action<float> OnLevelProgressChange;  // this call when brick leave form it's original position or be demolished.
 
     public bool inGame = true;
 
@@ -51,6 +52,11 @@ public class GameManagers : MonoBehaviour
         float hight = LevelManager.Instance.GetTowerHight() - cameraYOffestToTower;
         CameraMananger.Instance.UpTo(hight);
         OnGameStart?.Invoke();
+    }
+
+    public void InvokeLevelProcessChange(float percent)
+    {
+        OnLevelProgressChange?.Invoke(percent);
     }
 }
 

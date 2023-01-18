@@ -18,6 +18,8 @@ public class LevelManager : MonoBehaviour
     int curTopLayerIndex = 0;
     int curShowBottomIndex = 0;
     int towerHight = 0;
+    int allBrickCount = 0;
+    int demolishBrickCount = 0;
 
     private void Awake()
     {
@@ -39,11 +41,15 @@ public class LevelManager : MonoBehaviour
         for (int index = 0; index < towerLayers.Count - level.ShowLayerNum; index++)
         {
             towerLayers[index].Pin();
+            allBrickCount += towerLayers[index].bricks.Count;
         }
         for (int index = towerLayers.Count - level.ShowLayerNum; index < towerLayers.Count; index++)
         {
             towerLayers[index].Loosen();
+            allBrickCount += towerLayers[index].bricks.Count;
         }
+
+        allBrickCount -= towerLayers[towerLayers.Count - 1].bricks.Count / 2;
 
         spawn.Reset();
         StartCoroutine("CheckTower");
@@ -57,6 +63,13 @@ public class LevelManager : MonoBehaviour
     public int GetTowerHight()
     {
         return towerHight;
+    }
+
+    public void BrickOut(int count)
+    {
+        demolishBrickCount += count;
+        Debug.Log("cur=" + demolishBrickCount + "  all=" + allBrickCount);
+        GameManagers.Instance.InvokeLevelProcessChange(demolishBrickCount * 1f / allBrickCount);
     }
 
     public BrickColor GetValidBrickColor()
@@ -106,11 +119,15 @@ public class LevelManager : MonoBehaviour
             int changeCount = 0;
             int curIndex = curTopLayerIndex;
             bool hasChange = false;
+            var brickOutCount = 0;
 
             while (curIndex >= 0)
             {
+
+
                 TowerLayer towerLayer = towerLayers[curIndex];
-                towerLayer.UpdateBrickState();
+                brickOutCount += towerLayer.UpdateBrickState();
+
                 if (towerLayer.isCollapse())
                 {
                     changeCount++;
@@ -126,16 +143,27 @@ public class LevelManager : MonoBehaviour
             if (hasChange)
             {
                 Debug.Log($"before change: top={curTopLayerIndex} bottom={curShowBottomIndex}");
+
                 int losenTop = curShowBottomIndex - 1;
                 curShowBottomIndex -= changeCount;
                 curShowBottomIndex = curShowBottomIndex >= 0 ? curShowBottomIndex : 0;
                 int losenCount = curTopLayerIndex - curShowBottomIndex - showingNum + 1;
                 curTopLayerIndex -= changeCount;
+
                 Debug.Log($"do change: loosentop={losenTop} losenCount={losenCount}");
+
                 LosenNewLayer(losenCount, losenTop);
+
                 Debug.Log(changeCount + " layer be destory.");
+
                 NotifyValidTowerLayerChange();
             }
+
+            if (brickOutCount > 0)
+            {
+                BrickOut(brickOutCount);
+            }
+
             yield return new WaitForSeconds(0.5f);
         }
     }
